@@ -45,8 +45,30 @@ def main(filename):
 
     slimes = []
 
-    # TODO write your code here
-    pass
+    for line in slime_lines:
+        m, v, r, g, b = [int(c) for c in line.split()]
+        slimes.append(Slime(m, v, Color(r, g, b)))
+
+    for line in order_lines:
+        values = line.split()
+        op = values[0]
+        index = int(values[1])
+        if op == 'EAT':
+            mass = int(values[2])
+            foodtype = values[3]
+            slimes[index].eat(mass, foodtype)
+        elif op == 'SPLIT':
+            copies = int(values[2])
+            slime = slimes[index]
+            slimes[index] = None
+            slimes += slime.split(copies)
+        elif op == 'COMBINE':
+            index2 = int(values[2])
+            slimes[index] = slimes[index] + slimes[index2]
+
+    for (index, slime) in enumerate(slimes):
+        if slime is not None:
+            print(index, slime.mass, slime.volume, format_color(slime.color))
 
 if __name__ == '__main__':
     filename = sys.argv[1]

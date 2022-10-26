@@ -198,9 +198,13 @@ You will also learn by example how to handle errors using try-except.
 
 ## Grading
 
-This problem is graded using only a simple test script.
+This problem is graded using a test script.
 
 You can run the test script to see the available checkpoints.
+
+Note that for the programming challenge part (the simulation), only the first
+test case has an associated output file. The other two test cases' output files
+are not given.
 
 The provided doctest will be quite credible as an at-home test. If you pass all
 of them, you will mostly pass the script.

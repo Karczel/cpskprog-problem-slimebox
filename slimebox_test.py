@@ -14,7 +14,6 @@ MIT License
 
 import sys
 import os
-import hashlib
 import filecmp
 from contextlib import contextmanager
 import pytest
@@ -135,15 +134,4 @@ def test_case1(capsys):
         expected_output = f.read().strip()
 
     assert captured.out.strip() == expected_output
-
-def test_case2(capsys):
-    sim.main('case2.input')
-    captured = capsys.readouterr()
-    assert hashlib.sha256(captured.out.strip().encode('utf_8')).hexdigest() == '3aa59581f6bccac2bf32ccaa3f9e529c1d49ca1b17add9abf8689b5ea8eb31b8'
-
-def test_case3(capsys):
-    sim.main('case3.input')
-    captured = capsys.readouterr()
-    assert hashlib.sha256(captured.out.strip().encode('utf_8')).hexdigest() == 'a5cec39375c971b0dd7121f77dc62d04374bcaf9966a1c51a33d8a28beb58695'
-
 
