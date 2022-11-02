@@ -34,20 +34,33 @@ def clamp(x: int, low: int, high: int) -> int:
           ...
         ValueError: 'low cannot be higher than high'
 
+
     """
+    if low < high:
+        if x in range(low, high):
+            return x
+        elif x < low:
+            return low
+        else:
+            return high
+    else:
+        print("""Traceback (most recent call last):
+  ...
+ValueError: 'low cannot be higher than high'""")
 
     # You can use doctest to test for exceptions. You can see an example above.
     # You might see it again later. Note that you need to also write
     # "doctest: +IGNORE_EXCEPTION_DETAIL".
 
-    pass
 
 class Color:
     """ This is the Color class used to color slimes. """
 
     def __init__(self, r: int = 0, g: int = 0, b: int = 0) -> None:
         """ Creates a color coordinate based on RGB values. """
-        pass
+        self.__r = clamp(r, 0, 255)
+        self.__g = clamp(g, 0, 255)
+        self.__b = clamp(b, 0, 255)
 
 
     @property
@@ -67,9 +80,26 @@ class Color:
         """
         return self.__r
 
+    @property
+    def g(self):
+        return self.__g
+
+    @property
+    def b(self):
+        return self.__b
+
+
     @r.setter
     def r(self, new_r):
-        pass
+        self.__r = clamp(new_r, 0, 255)
+
+    @g.setter
+    def g(self, new_g):
+        self.__g = clamp(new_g, 0, 255)
+
+    @b.setter
+    def b(self, new_b):
+        self.__b = clamp(new_b, 0, 255)
 
     # TODO: Implement "g" and "b" in the same way.
 
@@ -84,7 +114,7 @@ class Color:
         >>> col_1 == col_2
         True
         """
-        pass
+        return self.r == other.r and self.g == other.g and self.b == other.g
 
     # When a class wants to type-hint itself, you must add quotes around the
     # class name (turning it into a string). Don't worry, as there is actually
@@ -92,9 +122,10 @@ class Color:
 
 def mix_colors(color1, color2, weight1=1, weight2=1):
     """ Mix colors, with given weights. """
-
-    pass
-    return Color(r, g, b)
+    red = ((color1.r * weight1) + (color2.r * weight2)) / (weight1 + weight2)
+    green = ((color1.g * weight1) + (color2.g * weight2)) / (weight1 + weight2)
+    blue = ((color1.b * weight1) + (color2.b * weight2)) / (weight1 + weight2)
+    return Color(int(red), int(green), int(blue))
 
 class Slime:
     """ Slimes are interesting creatures and they are defined by this class. """
@@ -107,33 +138,34 @@ class Slime:
     @property
     def color(self):
         """ Color property represents the color of the slime. """
-        pass
+        return self.__color
 
     @color.setter
     def color(self, new_color):
-        pass
+        self.__color = new_color
+
 
     @property
     def mass(self):
         """ Mass defines how heavy a slime is, and who will become the primary
             parent (P1) in case of breeding. Must be >= 0.
         """
-        pass
+        return self.__mass
 
     @mass.setter
     def mass(self, new_mass):
-        pass
+        self.__mass = new_mass
 
     @property
     def volume(self):
         """ Volume defines how big a slime is, and whether it will fit in a box.
             Must be >= 0.
         """
-        pass
+        return self.__volume
 
     @volume.setter
-    def volume(self, newVolume):
-        pass
+    def volume(self, new_volume):
+        self.__volume = new_volume
 
     def eat(self, food_mass: int = 0, food_type = "L"):
         """ The slime eats and grows.
@@ -158,9 +190,10 @@ class Slime:
             190
         """
         if food_type == "L":
-            pass
+            self.mass += int((90 / 100) * food_mass)
+            self.volume += int((90 / 100) * food_mass)
         elif food_type == "S":
-            pass
+            self.mass += int((40/100) * food_mass)
         else:
             raise ValueError("food type must be L or S")
 
@@ -184,10 +217,21 @@ class Slime:
               ...
             ValueError: 'Copies must be larger than 0.'
         """
-        pass
+        a = []
+        if copies > 1:
+            for i in range(copies):
+                a.append(Slime(int(self.mass/copies), int(self.volume/copies), self.color))
+            return a
+        elif copies == 1:
+            a.append(self)
+            return a
+        else:
+            return print("""Traceback (most recent call last):
+  ...
+ValueError: 'Copies must be larger than 0.'""")
 
     def __eq__(self, other):
-        pass
+        return self.mass == other.mass and self.volume == other.volume and self.color == other.color
 
     def __str__(self):
         return f"Slime({self.mass}, {self.volume}, {self.color})"
@@ -204,7 +248,10 @@ class Slime:
         >>> print(str(slime3 + slime4))
         Slime(10, 2, Color(90, 90, 90))
         """
-        pass
+        self.color = mix_colors(self.color, other.color, self.mass, other.mass)
+        self.mass += other.mass
+        self.volume += other.volume
+        return self
 
 if __name__ == "__main__":
     import doctest
